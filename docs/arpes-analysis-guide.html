@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARPES Analysis Skill - Design & Usage Guide</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --code-bg: #1e1e1e;
+            --text: #333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        header p { opacity: 0.9; }
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+        h3 { color: var(--accent); margin: 1.5rem 0 0.75rem; }
+        section { margin-bottom: 2rem; }
+        .card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        code {
+            background: var(--code-bg);
+            color: #a6e22e;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        .comment { color: #75715e; }
+        .keyword { color: #66d9ef; }
+        .string { color: #e6db74; }
+        .function { color: #a6e22e; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th { background: var(--primary); color: white; }
+        tr:nth-child(even) { background: var(--light); }
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+        .step-num {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        .checklist {
+            list-style: none;
+        }
+        .checklist li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        footer {
+            text-align: center;
+            color: #666;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+        @media print {
+            body { padding: 1rem; }
+            .card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ARPES Analysis Skill</h1>
+        <p>Standardized workflow for Angle-Resolved Photoemission Spectroscopy data analysis</p>
+        <span class="badge badge-success">pyarpes</span>
+        <span class="badge badge-warning">Publication Ready</span>
+    </header>
+
+    <main>
+        <!-- Overview -->
+        <section>
+            <h2>Overview</h2>
+            <div class="card">
+                <p>This skill standardizes <strong>ARPES (Angle-Resolved Photoemission Spectroscopy)</strong> data analysis using <strong>pyarpes</strong>. It ensures reproducible, publication-quality results through a consistent workflow.</p>
+            </div>
+        </section>
+
+        <!-- When to Use -->
+        <section>
+            <h2>When to Use</h2>
+            <ul>
+                <li>Loading <code>.h5</code>, <code>.nxy</code> ARPES data files</li>
+                <li>Extracting <strong>EDC</strong> (vertical cut: fixed momentum, varying energy)</li>
+                <li>Extracting <strong>MDC</strong> (horizontal cut: fixed energy, varying momentum)</li>
+                <li>Calibrating Fermi energy, momentum axis, or background subtraction</li>
+                <li>Plotting E-K slices, Fermi surfaces, band dispersion</li>
+                <li>Exporting processed data or 300 DPI publication figures</li>
+            </ul>
+        </section>
+
+        <!-- Workflow -->
+        <section>
+            <h2>Analysis Workflow</h2>
+            
+            <div class="workflow-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>Import Data</strong>
+                    <p>Load h5 or nxy files using pyarpes</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>Preprocess</strong>
+                    <p>Fermi calibration → Background subtraction → Momentum calibration</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>Visualize</strong>
+                    <p>E-K slices, EDC, MDC with correct colormaps</p>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-num">4</div>
+                <div>
+                    <strong>Export</strong>
+                    <p>Save processed data (.h5) and publication figures (300 DPI PNG)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Reference -->
+        <section>
+            <h2>Quick Reference</h2>
+            
+            <h3>Data Loading</h3>
+            <pre><code><span class="keyword">from</span> pyarpes.io <span class="keyword">import</span> load_h5, load_nxy
+
+data = load_h5(<span class="string">"sample.h5"</span>)  <span class="comment"># or load_nxy("sample.nxy")</span></code></pre>
+
+            <h3>Preprocessing Pipeline</h3>
+            <pre><code><span class="comment"># 1. Fermi calibration</span>
+fermi = find_fermi_edge(data)
+data_cal = calibrate_fermi(data, fermi)
+
+<span class="comment"># 2. Background subtraction</span>
+data_bg = subtract_background(data_cal, kind=<span class="string">'shirley'</span>)
+
+<span class="comment"># 3. Momentum calibration</span>
+cal = calibration_from_lattice(a=<span class="string">3.8</span>, b=<span class="string">3.8</span>, alpha=<span class="string">90</span>)
+data_cal = data_bg.calibrate(cal)</code></pre>
+
+            <h3>EDC vs MDC</h3>
+            <pre><code><span class="comment"># EDC at k=0 (Gamma point)</span>
+edc = data.sel(k=<span class="string">0.0</span>, method=<span class="string">'nearest'</span>).sum(<span class="string">'phi'</span>)
+
+<span class="comment"># MDC at Fermi level</span>
+mdc = data.sel(energy=<span class="string">0.0</span>, method=<span class="string">'nearest'</span>).sum(<span class="string">'energy'</span>)</code></pre>
+        </section>
+
+        <!-- File Naming -->
+        <section>
+            <h2>File Naming Convention</h2>
+            
+            <div class="card">
+                <h3>Raw Data</h3>
+                <code>{sample}_{mp-id}_{lattice_params}_{beamline}_{temp}K_{energy}eV_{polarization}.h5</code>
+                <p style="margin-top: 1rem;">Example: <code>Bi2212_mp-2194_a3.8_b3.8_alpha90_BLS_30K_21.2eV_L.h5</code></p>
+            </div>
+            
+            <div class="card">
+                <h3>Analyzed Data</h3>
+                <code>{original}_analysis_{step}.h5</code>
+                <p style="margin-top: 1rem;">Suffixes: <code>_fermi_cal</code>, <code>_bg_sub</code>, <code>_k_cal</code>, <code>_processed</code></p>
+            </div>
+        </section>
+
+        <!-- Colormaps -->
+        <section>
+            <h2>Colormap Standards</h2>
+            <table>
+                <tr>
+                    <th>Plot Type</th>
+                    <th>Colormap</th>
+                    <th>Avoid</th>
+                </tr>
+                <tr>
+                    <td>E-K slice, EDC, MDC</td>
+                    <td><code>magma</code></td>
+                    <td rowspan="2">rainbow/jet</td>
+                </tr>
+                <tr>
+                    <td>Fermi surface</td>
+                    <td><code>viridis</code></td>
+                </tr>
+                <tr>
+                    <td>Difference maps</td>
+                    <td><code>RdBu</code></td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Common Mistakes -->
+        <section>
+            <h2>Common Mistakes</h2>
+            
+            <div class="warning">
+                <strong>EDC/MDC axis confusion</strong><br>
+                EDC = vertical cut (constant k, energy on x-axis)<br>
+                MDC = horizontal cut (constant E, momentum on x-axis)
+            </div>
+            
+            <div class="warning">
+                <strong>Skipping background subtraction</strong><br>
+                Raw data contains secondary electrons. Subtract before quantification.
+            </div>
+            
+            <div class="warning">
+                <strong>Wrong Fermi reference</strong><br>
+                Verify with Au reference or known gap. Check at multiple k-points.
+            </div>
+            
+            <div class="warning">
+                <strong>Wrong colormap</strong><br>
+                Always use <code>magma</code> for spectral intensity, <code>viridis</code> for Fermi surfaces.
+            </div>
+        </section>
+
+        <!-- Checklist -->
+        <section>
+            <h2>Publication Checklist</h2>
+            <ul class="checklist">
+                <li>Fermi edge calibrated with reference</li>
+                <li>Background subtracted (Shirley or Tougaard)</li>
+                <li>Momentum axis calibrated with lattice parameters</li>
+                <li><code>magma</code> or <code>viridis</code> colormap applied</li>
+                <li>All axes labeled with units (eV, Å⁻¹)</li>
+                <li>Figure at 300+ DPI</li>
+                <li>Data saved as <code>.h5</code></li>
+                <li>Code committed to git</li>
+            </ul>
+        </section>
+
+        <!-- How to Use -->
+        <section>
+            <h2>How to Use This Skill</h2>
+            
+            <h3>Automatic Loading</h3>
+            <p>When you mention ARPES data, EDC, MDC, or band structure analysis, the skill loads automatically.</p>
+            
+            <h3>Manual Loading</h3>
+            <pre><code>/skill arpes-analysis</code></pre>
+            
+            <h3>Example Commands</h3>
+            <pre><code>Load my ARPES data and extract EDC at Gamma point
+Plot the Fermi surface with viridis colormap
+Calibrate the momentum axis using lattice parameters
+Export publication-ready E-K slice at 300 DPI</code></pre>
+            
+            <div class="tip">
+                <strong>Tip:</strong> The skill follows a strict preprocessing order: Fermi calibration → Background → Momentum. Always follow this sequence for consistent results.
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>ARPES Analysis Skill | OpenCode Superpowers</p>
+        <p>Generated: April 2026</p>
+    </footer>
+</body>
+</html>
